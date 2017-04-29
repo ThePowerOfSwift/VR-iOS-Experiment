@@ -10,12 +10,12 @@ import UIKit
 import SceneKit
 import CoreMotion
 
-func degreesToRadians(degrees: Float) -> Float {
-    return (degrees * Float(M_PI)) / 180.0
+func degreesToRadians(_ degrees: Float) -> Float {
+    return (degrees * .pi) / 180.0
 }
 
-func radiansToDegrees(radians: Float) -> Float {
-    return (180.0/Float(M_PI)) * radians
+func radiansToDegrees(_ radians: Float) -> Float {
+    return (180.0 / .pi) * radians
 }
 
 class ViewController: UIViewController, SCNSceneRendererDelegate {
@@ -31,11 +31,11 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        leftSceneView?.backgroundColor = UIColor.blackColor()
-        rightSceneView?.backgroundColor = UIColor.blackColor()
+        leftSceneView?.backgroundColor = UIColor.black
+        rightSceneView?.backgroundColor = UIColor.black
         
         // Create Scene
-        var scene = SCNScene()
+        let scene = SCNScene()
         
         leftSceneView?.scene = scene
         rightSceneView?.scene = scene
@@ -77,7 +77,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         
         // Ambient Light
         let ambientLight = SCNLight()
-        ambientLight.type = SCNLightTypeAmbient
+        ambientLight.type = SCNLight.LightType.ambient
         ambientLight.color = UIColor(white: 0.1, alpha: 1.0)
         let ambientLightNode = SCNNode()
         ambientLightNode.light = ambientLight
@@ -85,7 +85,7 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         
         // Omni Light
         let diffuseLight = SCNLight()
-        diffuseLight.type = SCNLightTypeOmni
+        diffuseLight.type = SCNLight.LightType.omni
         diffuseLight.color = UIColor(white: 1.0, alpha: 1.0)
         let diffuseLightNode = SCNNode()
         diffuseLightNode.light = diffuseLight
@@ -112,14 +112,14 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         
         let material = SCNMaterial()
         material.diffuse.contents = UIImage(named: "checkerboard_pattern.png")
-        material.specular.contents = UIColor.whiteColor()
+        material.specular.contents = UIColor.white
         material.shininess = 1.0
         boingBall.materials = [ material ]
         
         // Fire Particle System, attached to the boing ball
         let fire = SCNParticleSystem(named: "FireParticles", inDirectory: nil)
-        fire.emitterShape = boingBall
-        boingBallNode.addParticleSystem(fire)
+        fire?.emitterShape = boingBall
+        boingBallNode.addParticleSystem(fire!)
         
         // Make the ball bounce
         let animation = CABasicAnimation(keyPath: "position.y")
@@ -144,15 +144,15 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         // Respond to user head movement
         motionManager = CMMotionManager()
         motionManager?.deviceMotionUpdateInterval = 1.0 / 60.0
-        motionManager?.startDeviceMotionUpdatesUsingReferenceFrame(CMAttitudeReferenceFrame.XArbitraryZVertical)
+        motionManager?.startDeviceMotionUpdates(using: CMAttitudeReferenceFrame.xArbitraryZVertical)
         
         leftSceneView?.delegate = self
         
-        leftSceneView?.playing = true
-        rightSceneView?.playing = true
+        leftSceneView?.isPlaying = true
+        rightSceneView?.isPlaying = true
     }
     
-    func renderer(aRenderer: SCNSceneRenderer, updateAtTime time: NSTimeInterval)
+    func renderer(_ aRenderer: SCNSceneRenderer, updateAtTime time: TimeInterval)
     {
         if let mm = motionManager, let motion = mm.deviceMotion {
             let currentAttitude = motion.attitude
