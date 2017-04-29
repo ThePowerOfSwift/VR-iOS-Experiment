@@ -20,8 +20,8 @@ func radiansToDegrees(_ radians: Float) -> Float {
 
 class ViewController: UIViewController, SCNSceneRendererDelegate {
     
-    @IBOutlet var leftSceneView : SCNView?
-    @IBOutlet var rightSceneView : SCNView?
+    var leftSceneView : SCNView!
+    var rightSceneView : SCNView!
     
     var motionManager : CMMotionManager?
     var cameraRollNode : SCNNode?
@@ -30,6 +30,14 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        leftSceneView = SCNView()
+        leftSceneView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(leftSceneView)
+        
+        rightSceneView = SCNView()
+        rightSceneView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(rightSceneView)
         
         leftSceneView?.backgroundColor = UIColor.black
         rightSceneView?.backgroundColor = UIColor.black
@@ -163,9 +171,17 @@ class ViewController: UIViewController, SCNSceneRendererDelegate {
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillLayoutSubviews() {
+        leftSceneView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        leftSceneView.rightAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        leftSceneView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
+        leftSceneView.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
+        
+        rightSceneView.leftAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        rightSceneView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        rightSceneView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
+        rightSceneView.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
+        
     }
     
     
